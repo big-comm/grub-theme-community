@@ -52,13 +52,13 @@ package() {
         srcdir="${srcdir}/${pkgname}"
     fi
 
-    # Install files
-    local dirs=("usr" "etc" "opt")
-    for dir in "${dirs[@]}"; do
-        if [ -d "${srcdir}/${dir}" ]; then
-            cp -a "${srcdir}/${dir}" "${pkgdir}/"
-        fi
-    done
+        # Install files
+        local dirs=("usr" "etc" "opt" "boot")
+        for dir in "${dirs[@]}"; do
+            if [ -d "${srcdir}/${dir}" ]; then
+                cp -a "${srcdir}/${dir}" "${pkgdir}/"
+            fi
+        done
 
     # Install license file if present
     if [ -f "LICENSE" ]; then
