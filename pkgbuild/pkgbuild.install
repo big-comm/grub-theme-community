@@ -43,8 +43,9 @@ post_install() {
     printMsg "Configuring GRUB theme after installation..."
     
     # Add bootsplash-community in grub
-    if ! grep -q '/boot/grub/themes/community/theme.txt' /etc/default/grub; then
-        printMsg "Setting GRUB theme path in configuration..."
+    if ! grep -q 'GRUB_THEME=' /etc/default/grub; then
+        echo 'GRUB_THEME="/boot/grub/themes/community/theme.txt"' >> /etc/default/grub
+    else
         sed -i 's|^ *\bGRUB_THEME\b *=.*|GRUB_THEME="/boot/grub/themes/community/theme.txt"|' /etc/default/grub
     fi
 
