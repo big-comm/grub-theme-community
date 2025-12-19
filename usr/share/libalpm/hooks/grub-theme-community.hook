@@ -1,0 +1,12 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = grub
+Target = grub-theme-community
+
+[Action]
+Description = Configuring GRUB BigCommunity theme
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/configure-grub-theme
+NeedsTargets

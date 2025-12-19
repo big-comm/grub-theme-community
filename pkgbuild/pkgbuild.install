@@ -40,28 +40,39 @@ printErr() {
 
 # Function executed after package installation
 post_install() {
-    printMsg "Configuring GRUB theme after installation..."
-    
-    # Add bootsplash-community in grub
-    if ! grep -q 'GRUB_THEME=' /etc/default/grub; then
-        echo 'GRUB_THEME="/boot/grub/themes/community/theme.txt"' >> /etc/default/grub
+    printMsg "Package installation completed"
+
+    # Note: The GRUB theme configuration is handled by the pacman hook
+    # located at /usr/share/libalpm/hooks/grub-theme-community.hook
+    # which triggers automatically when GRUB or this package is installed/upgraded
+
+    # Fallback: If hook script doesn't exist, configure manually
+    if [ ! -f "/usr/share/libalpm/scripts/configure-grub-theme" ]; then
+        printMsg "Hook script not found, configuring GRUB theme manually..."
+
+        # Add or update GRUB_THEME in grub config
+        if ! grep -q 'GRUB_THEME=' /etc/default/grub; then
+            echo 'GRUB_THEME="/boot/grub/themes/community/theme.txt"' >> /etc/default/grub
+        else
+            sed -i 's|^ *\bGRUB_THEME\b *=.*|GRUB_THEME="/boot/grub/themes/community/theme.txt"|' /etc/default/grub
+        fi
+
+        # Update GRUB
+        printMsg "Updating GRUB configuration..."
+        if command -v update-grub &> /dev/null; then
+            update-grub
+            printOk "GRUB configuration updated successfully using update-grub"
+        elif command -v grub-mkconfig &> /dev/null; then
+            grub-mkconfig -o /boot/grub/grub.cfg
+            printOk "GRUB configuration updated successfully using grub-mkconfig"
+        else
+            printWarn "Unable to update GRUB configuration automatically."
+            printWarn "Please update GRUB configuration manually after installation."
+        fi
     else
-        sed -i 's|^ *\bGRUB_THEME\b *=.*|GRUB_THEME="/boot/grub/themes/community/theme.txt"|' /etc/default/grub
+        printMsg "GRUB theme will be configured by the system hook"
     fi
 
-    # Update GRUB
-    printMsg "Updating GRUB configuration..."
-    if command -v update-grub &> /dev/null; then
-        update-grub
-        printOk "GRUB configuration updated successfully using update-grub"
-    elif command -v grub-mkconfig &> /dev/null; then
-        grub-mkconfig -o /boot/grub/grub.cfg
-        printOk "GRUB configuration updated successfully using grub-mkconfig"
-    else
-        printWarn "Unable to update GRUB configuration automatically."
-        printWarn "Please update GRUB configuration manually after installation."
-    fi
-    
     printOk "Installation completed successfully"
 }
 
