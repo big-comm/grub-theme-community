@@ -3,7 +3,8 @@
 pkgname=grub-theme-community
 pkgdesc="BigCommunity Grub Theme"
 # Uncomment and edit the following lines as needed
-#depends=('')
+depends=('grub' 'update-grub')
+backup=('etc/default/grub.d/bigcommunity.cfg')
 #makedepends=('')
 #optdepends=('')
 #conflicts=('')

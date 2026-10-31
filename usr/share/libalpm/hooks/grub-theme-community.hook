@@ -2,11 +2,9 @@
 Type = Package
 Operation = Install
 Operation = Upgrade
-Target = grub
 Target = grub-theme-community
 
 [Action]
-Description = Configuring GRUB BigCommunity theme
+Description = Regenerating the GRUB menu with the BigCommunity defaults...
 When = PostTransaction
-Exec = /usr/share/libalpm/scripts/configure-grub-theme
-NeedsTargets
+Exec = /usr/bin/update-grub
